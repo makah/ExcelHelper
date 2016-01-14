@@ -9,38 +9,49 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+' Representa uma nova planilha
+'
 ' @author Mauricio Arieira
 ' @date Julho 2013
 '
-' @version 1.1
+' @version 1.2
 
-' new Excel workbook
-Private Path As String
 
-Public oldWorkbook As Workbook
-Public newWorkbook As Workbook
+' Caminho do Excel que será aberto.
+Private path As String
 
-Private pIsReadOnly As Boolean
+' Variável que define se o arquivo foi aberto pelo objeto ou se já estava aberto.
 Private openedByMe As Boolean
 
+' WorkBook foi requisitado a abertura do novo arquivo Excel.
+Public oldWorkbook As Workbook
+
+' WorkBook do novo arquivo Excel.
+Public newWorkbook As Workbook
+
+' Guarda se o arquivo foi aberto como leitura.
+Private pIsReadOnly As Boolean
+
 ' Abre uma planilha que se encontra em outro arquivo.
-' Abre caso a planilha n�o esteja aberta. Caso contr�rio ativa a planilha solicitada.
+' Abre caso a planilha não esteja aberta. Caso contrário ativa a planilha solicitada.
 ' @param In filePath: O caminho da planilha
-' @param Optional In isReadOnly: Define se o arquivo ser� aberto somente para leitura.
-Sub Open(ByVal filePath As String, Optional ByVal isReadOnly As Boolean = True)
+' @param Optional In isReadOnly: Define se o arquivo será aberto somente para leitura.
+Sub OpenNewFile(ByVal FilePath As String, Optional ByVal isReadOnly As Boolean = True)
     Dim fileName As String
-    Dim actualScreenUpdate As Boolean
+    Dim actualScreenUpdate As Boolean, actualDisplayAlert As Boolean
 
     actualScreenUpdate = Application.ScreenUpdating
+    actualDisplayAlert = Application.DisplayAlerts
     Application.ScreenUpdating = False
     If IsNull(oldWorkbook) Or IsNull(newWorkbook) Then
-        MsgBox "Already in use."
+        MsgBox "Classe está sendo utilizada para referenciar outra planilha. Feche o arquivo antes de abrir outro."
     End If
     
     Set oldWorkbook = ActiveWorkbook
     pIsReadOnly = isReadOnly
     
-    fileName = Mid$(filePath, InStrRev(filePath, "\") + 1)
+    'Se já estiver aberto e for readOnly não precisa abrir.
+    fileName = Mid$(FilePath, InStrRev(FilePath, "\") + 1)
     
     On Error GoTo ElseLabel:
     Windows(fileName).Activate
@@ -50,8 +61,14 @@ Sub Open(ByVal filePath As String, Optional ByVal isReadOnly As Boolean = True)
     
     On Error GoTo 0
 
+    'Senão abre o arquivo
 ElseLabel:
-    Workbooks.Open fileName:="" & filePath & "", UpdateLinks:=False, ReadOnly:=isReadOnly
+    If Dir(FilePath) = "" Then
+        err.Raise vbObjectError + 101, "OCFile", "File not found: '" & FilePath & "'"
+    End If
+    
+    Workbooks.Open fileName:="" & FilePath & "", UpdateLinks:=False, ReadOnly:=isReadOnly
+    Application.DisplayAlerts = actualDisplayAlert
     openedByMe = True
         
 EndLabel:
@@ -60,7 +77,9 @@ EndLabel:
     Application.ScreenUpdating = actualScreenUpdate
 End Sub
 
-Sub Close(Optional ByVal saveChanges As Boolean = True)
+' Fecha o arquivo aberto. Caso o objeto não tenha sido responsável por abri-la
+'então ele não fecha.
+Sub CloseFile(Optional ByVal saveChanges As Boolean = True)
     On Error Resume Next
     If openedByMe Then
         oldWorkbook.Activate
