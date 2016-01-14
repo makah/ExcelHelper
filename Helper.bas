@@ -2,15 +2,15 @@ Attribute VB_Name = "Helper"
 Option Explicit
 
 ' @author Mauricio Arieira
-' @date Julho 2013
+' @date Janeiro 2016
 '
-' @version 1.9
+' @version 2.0
 
-' Ordena a tabela da Range selecionada. Lembrando que a tabela n„o estar com as colunas no 'AutoFilter'.
+' Ordena a tabela da Range selecionada. Lembrando que a tabela n√£o estar com as colunas no 'AutoFilter'.
 ' @param In currentSheet: Sheet onde a tabela se encontra.
 ' @param In tableRange: A tabela.
-' @param In columnIndex: O Ìndice da coluna da tabela. Caso queira ordenar a primeira coluna 'columnIndex' = 1
-' @param In ascending: True para ordenaÁ„o acendente, False para ordenaÁ„o descendente
+' @param In columnIndex: O √≠ndice da coluna da tabela. Caso queira ordenar a primeira coluna 'columnIndex' = 1
+' @param In ascending: True para ordena√ß√£o acendente, False para ordena√ß√£o descendente
 Sub Ordenar(ByVal currentSheet As Worksheet, ByVal tableRange As Range, ByVal columnIndex As Integer, ascending As Boolean)
     Dim orderBy As Integer
     orderBy = IIf(ascending, xlAscending, xlDescending)
@@ -34,10 +34,10 @@ Sub Ordenar(ByVal currentSheet As Worksheet, ByVal tableRange As Range, ByVal co
 End Sub
 
 
-' Importa o arquivo para a celula destino utilizando tab para separaÁ„o de colunas.
-' @param In filePath: O caminho onde o arquivo est· localizado.
+' Importa o arquivo para a celula destino utilizando tab para separa√ß√£o de colunas.
+' @param In filePath: O caminho onde o arquivo est√° localizado.
 ' @param In columnDataType: Um array com os tipos de cada coluna. Exemplo: Array(xlTextFormat, xlSkipColumn, xlGeneralFormat)
-' @param In destinationCell: A celula de destino da importaÁ„o.
+' @param In destinationCell: A celula de destino da importa√ß√£o.
 ' @param In isDotDecimnalSeparator: True caso o aquivo utilize '.' como separador decimal e falso caso utilize ','.
 Sub ImportFile(ByVal filePath As String, ByVal columnDataType As Variant, _
         ByVal destinationCell As Range, ByVal isDotDecimnalSeparator As Boolean)
@@ -82,10 +82,10 @@ Sub ImportFile(ByVal filePath As String, ByVal columnDataType As Variant, _
 End Sub
 
 
-' Converte o caminho do arquivo para uma string que pode ser adicionada na fÛrmula
+' Converte o caminho do arquivo para uma string que pode ser adicionada na f√≥rmula
 ' @param In path: O caminho do arquivo
 ' @return A string modificada
-' @remarks A funÁ„o n„o verifica se o arquivo existe.
+' @remarks A fun√ß√£o n√£o verifica se o arquivo existe.
 Function PathToFormula(ByVal path As String, ByVal sheetName As String) As String
     Dim arr As Variant, lenght As Integer, filePath As String, directoryPath As String
 
@@ -97,9 +97,9 @@ Function PathToFormula(ByVal path As String, ByVal sheetName As String) As Strin
 End Function
 
 ' Gera uma string com usando o formato do .NET - {0}, {1}, {2} ...
-' @param In strValue as String: A string utilizando o padr„o {n} onde n È o enÈsimo par‚metro da vari·vel 'arrParames'
-' @param In arrParames as Variant: Um vetor com os argumentos que ser„o substituidos na string 'strValue'
-' @return as String: A string j· formatada.
+' @param In strValue as String: A string utilizando o padr√£o {n} onde n √© o en√©simo par√¢metro da vari√°vel 'arrParames'
+' @param In arrParames as Variant: Um vetor com os argumentos que ser√£o substituidos na string 'strValue'
+' @return as String: A string j√° formatada.
 ' @example:  call StringFormat("My name is {0} {1}. Hey!", "Mauricio", "Arieira")
 Public Function StringFormat(ByVal strValue As String, ParamArray arrParames() As Variant) As String
     Dim i As Integer
@@ -111,7 +111,7 @@ Public Function StringFormat(ByVal strValue As String, ParamArray arrParames() A
     StringFormat = strValue
 End Function
 
-' Encontra todas as ocorrÍncias de um valor em um intervalo
+' Encontra todas as ocorr√™ncias de um valor em um intervalo
 ' @param In value as String: O valor a ser procurado no intervalo
 ' @param In theRange as Range: O intervalo
 ' @return as Double(): O vetor contendo as linhas que foram encontradas.
@@ -136,6 +136,3 @@ Public Function MatchAll(ByVal value As String, ByVal theRange As Range) As Doub
     
     MatchAll = results
 End Function
-
-
-
