@@ -111,28 +111,58 @@ Public Function StringFormat(ByVal strValue As String, ParamArray arrParames() A
     StringFormat = strValue
 End Function
 
-' Encontra todas as ocorrências de um valor em um intervalo
+'Encontra todas as ocorrências de um valor em um intervalo
 ' @param In value as String: O valor a ser procurado no intervalo
 ' @param In theRange as Range: O intervalo
+' @param Optional In lookWhole: Verifica a palavra por inteiro ou parte dela
 ' @return as Double(): O vetor contendo as linhas que foram encontradas.
-Public Function MatchAll(ByVal value As String, ByVal theRange As Range) As Double()
+Public Function MatchAll(ByVal value As String, ByVal theRange As Range, ByVal lookWhole As Boolean) As Double()
     Dim index As Long, rFoundCell As Range, total As Integer, results() As Double
-         
+    Dim lookAt As XlLookAt
+    
+    lookAt = IIf(lookWhole, XlLookAt.xlWhole, XlLookAt.xlPart)
+    
     total = WorksheetFunction.CountIf(theRange, value)
     If total = 0 Then
-        Exit Sub
+        Exit Function
     End If
-    ReDim results(total)
+    ReDim results(total - 1)
     
     Set rFoundCell = theRange.Cells(1, 1)
-    For index = 1 To total
+    For index = 0 To total - 1
          
         Set rFoundCell = theRange.Find(What:=value, After:=rFoundCell, _
-                LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, _
+                LookIn:=xlValues, lookAt:=lookAt, SearchOrder:=xlByRows, _
                 SearchDirection:=xlNext, MatchCase:=False)
         
-        results(index) = rFoundCell.Row
+        results(index) = rFoundCell.row
     Next index
     
     MatchAll = results
+End Function
+
+'Verifica se a Sheet Existe
+'@param In sheetName as String: Nome da Sheet
+'@return as Boolean: True caso a sheet Existe e False caso contrário
+Function isSheetExists(ByVal sheetName As String) As Boolean
+    Dim str As String
+    isSheetExists = False
+    
+    On Error GoTo ERRORHANDLER
+    str = Sheets(sheetName).Name
+    isSheetExists = True
+ERRORHANDLER:
+End Function
+
+'Verifica se o array está vazio
+'@param In arr as Variant: O array
+'@return as Boolean: True caso a array esteja vazio e False caso contrário
+Function IsEmptyArray(ByRef arr As Variant) As Boolean
+    Dim i As Double
+    
+    IsEmptyArray = True
+    
+    On Error GoTo ERRORHANDLER
+    IsEmptyArray = (UBound(arr) < 0)
+ERRORHANDLER:
 End Function
