@@ -6,9 +6,9 @@ Library to help Excel VBA programming
 Examples
 -------
 
-The following examples demonstrate using the Google Maps API to get directions between two locations.
+The following examples demonstrate using Classes and Modules
 
-### GetJSON Example
+### OcFile Example
 ```VB.net
 Const DIRECTORY_PATH As String = "C:\MY_PATH"
 Const BD_SHEET_NAME As String = "BD"
